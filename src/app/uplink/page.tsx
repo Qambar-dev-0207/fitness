@@ -114,7 +114,7 @@ export default function UplinkPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Generation failed");
       
-      localStorage.setItem("fitai_protocol", JSON.stringify(data));
+      localStorage.setItem("svora_protocol", JSON.stringify(data));
       window.location.href = "/protocol";
     } catch (error: any) {
       console.error("Uplink failed:", error);

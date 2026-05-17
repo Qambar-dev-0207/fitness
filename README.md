@@ -1,6 +1,6 @@
-# FitAI // ÉLAN Somatic Club
+# SVORA
 
-**FitAI** is a premium, AI-driven wellness and fitness platform that bridges the gap between minimalist luxury aesthetics and advanced biometric intelligence. It delivers a "Boutique Wellness" experience through a sophisticated "Cyber-Zen" interface, guiding users from somatic profiling to the generation of high-fidelity, periodized training protocols.
+**SVORA** is a premium, AI-driven wellness and fitness platform that bridges the gap between minimalist luxury aesthetics and advanced biometric intelligence. It delivers a "Boutique Wellness" experience through a sophisticated "Cyber-Zen" interface, guiding users from somatic profiling to the generation of high-fidelity, periodized training protocols.
 
 ## // CORE PHILOSOPHY
 
@@ -57,4 +57,4 @@ npm run dev
 - `src/components`: Reusable "Boutique" UI units (`Preloader`, `CustomCursor`, `DecryptedText`).
 
 ---
-**FitAI // Engineering Somatic Excellence.**
+**SVORA // Engineering Somatic Excellence.**

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
     const data = await request.json();
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
 
     const entry = {
       userId: session.user.id,
@@ -31,7 +31,7 @@ export async function GET() {
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
 
     const entries = await db.collection("journal_entries")
       .find({ userId: session.user.id })

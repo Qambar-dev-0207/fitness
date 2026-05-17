@@ -56,7 +56,7 @@ export default function EnhancedLanding() {
       {/* --- NAVIGATION --- */}
       <nav className="fixed top-0 left-0 w-full z-50 px-8 py-8 md:px-14 flex justify-between items-center mix-blend-difference pointer-events-none">
         <Link href="/" className="group flex flex-col pointer-events-auto">
-          <span className="font-serif text-4xl italic tracking-tighter text-white hover:text-gold-leaf transition-colors duration-500">FitAI</span>
+          <span className="font-serif text-4xl italic tracking-tighter text-white hover:text-gold-leaf transition-colors duration-500">SVORA</span>
           <div className="h-[1px] w-0 bg-gold-leaf group-hover:w-full transition-all duration-700" />
         </Link>
         
@@ -393,7 +393,7 @@ export default function EnhancedLanding() {
       <footer className="py-24 px-8 md:px-20 border-t border-white/5 bg-void relative z-30">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-16 md:items-center">
           <div className="space-y-6">
-             <span className="font-serif text-4xl italic tracking-tighter text-white">FitAI</span>
+             <span className="font-serif text-4xl italic tracking-tighter text-white">SVORA</span>
              <p className="text-[9px] font-mono text-white/30 uppercase tracking-[0.4em] leading-loose">
                 Somatic Excellence. <br />
                 Established 2026.

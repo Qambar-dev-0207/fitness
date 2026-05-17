@@ -45,7 +45,8 @@ export default function LoginPage() {
       >
         <div className="text-center space-y-4">
           <Link href="/" className="inline-block">
-            <span className="font-display text-4xl italic tracking-tighter text-white">ÉLAN</span>
+            <span className="font-display text-4xl italic tracking-tighter text-white">SVORA</span>
+
           </Link>
           <h2 className="text-[10px] font-mono uppercase tracking-[0.5em] text-gold-leaf">Verify Identity</h2>
         </div>

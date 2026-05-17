@@ -4,7 +4,7 @@ import clientPromise from '@/lib/mongodb';
 export async function POST(request: Request) {
   try {
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
     const data = await request.json();
 
     // Add timestamp

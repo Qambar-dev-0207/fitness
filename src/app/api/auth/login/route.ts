@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const { email, password } = await request.json();
     const normalizedEmail = email.toLowerCase().trim();
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
 
     const user = await db.collection("users").findOne({ email: normalizedEmail });
     if (!user) {

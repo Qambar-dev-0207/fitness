@@ -31,7 +31,7 @@ export const Preloader = () => {
                 transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
                 className="font-serif text-6xl md:text-8xl italic text-white tracking-tighter"
               >
-                ÉLAN
+                SVORA
               </motion.h1>
             </div>
             

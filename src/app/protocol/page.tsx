@@ -293,7 +293,7 @@ export default function ProtocolPage() {
         }
         setUser(userData);
 
-        const data = localStorage.getItem("fitai_protocol");
+        const data = localStorage.getItem("svora_protocol");
         if (data) {
           const parsed = JSON.parse(data);
           if (parsed && !parsed.error) {
@@ -307,7 +307,7 @@ export default function ProtocolPage() {
           if (routineRes.ok) {
             const dbRoutine = await routineRes.json();
             setPlan(dbRoutine);
-            localStorage.setItem("fitai_protocol", JSON.stringify(dbRoutine));
+            localStorage.setItem("svora_protocol", JSON.stringify(dbRoutine));
           }
         }
       } catch (e) {
@@ -355,7 +355,7 @@ export default function ProtocolPage() {
       <nav className="fixed top-0 w-full z-40 bg-jet-black/80 backdrop-blur-md border-b border-white/5 px-6 md:px-14 py-4 flex justify-between items-center">
         <div className="flex items-center gap-12">
           <Link href="/" className="group flex flex-col pointer-events-auto">
-            <span className="font-serif text-3xl italic tracking-tighter text-white">ÉLAN</span>
+            <span className="font-serif text-3xl italic tracking-tighter text-white">SVORA</span>
           </Link>
           <div className="hidden md:flex gap-8">
             <button 

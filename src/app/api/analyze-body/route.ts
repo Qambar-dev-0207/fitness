@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const prompt = `
-      You are an expert biometric analyst for FitAI. 
+      You are an expert biometric analyst for SVORA. 
       Compare these two physique photos (Before vs. Current).
       Analyze structural changes, muscle density, body fat percentage, and posture.
       
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
     // Store in DB
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
     await db.collection("body_reports").insertOne({
       beforeImage, // In real app, store URL, not base64
       currentImage,

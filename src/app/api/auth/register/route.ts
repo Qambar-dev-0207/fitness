@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     
     console.log("REGISTER_DEBUG: Connecting to DB");
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
 
     console.log("REGISTER_DEBUG: Checking existing user");
     const existingUser = await db.collection("users").findOne({ email: normalizedEmail });

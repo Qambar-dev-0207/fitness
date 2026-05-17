@@ -8,7 +8,7 @@ export async function GET() {
     const userId = session?.user?.id || "guest";
 
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
 
     // Get the most recent routine for this user
     const routine = await db.collection("routines")

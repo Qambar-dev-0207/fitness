@@ -1,7 +1,7 @@
 # GEMINI.md
 
 ## Project Overview
-**FitAI** (also referred to as **ÉLAN Somatic Club**) is a premium, AI-driven wellness and fitness platform. It provides a "Boutique Wellness" experience by combining minimalist luxury aesthetics with advanced biometric intelligence. The application guides users through a "Somatic Profiling" process to generate high-fidelity training and nutritional protocols.
+**SVORA** is a premium, AI-driven wellness and fitness platform. It provides a "Boutique Wellness" experience by combining minimalist luxury aesthetics with advanced biometric intelligence. The application guides users through a "Somatic Profiling" process to generate high-fidelity training and nutritional protocols.
 
 ### Core Directives
 1.  **Somatic Analysis:** Analyzes user body type via computer vision or manual selection.
@@ -72,4 +72,4 @@
 - Vision capabilities are triggered if an image is provided during the "Somatic Profiling" stage.
 
 ---
-*FitAI // Engineering Somatic Excellence.*
+*SVORA // Engineering Somatic Excellence.*

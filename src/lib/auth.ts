@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const secretKey = "fitai_secret_key_bespoke_100k"; // In production, use process.env.JWT_SECRET
+const secretKey = "svora_secret_key_bespoke_100k"; // In production, use process.env.JWT_SECRET
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: Record<string, unknown>) {

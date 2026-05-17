@@ -21,7 +21,8 @@ export async function POST(req: Request) {
     const isAIGeneratedBodyType = bodyType === "AI_ANALYSIS_REQUESTED";
 
     const prompt = `
-      You are a friendly, expert personal trainer for FitAI Wellness. 
+      You are a friendly, expert personal trainer for SVORA Wellness.
+ 
       ${isAIGeneratedBodyType && image ? "I have provided an image of my body. Please first analyze my body type (Ectomorph, Mesomorph, Endomorph, Skinny-Fat, or Athletic Lean) based on the visual evidence." : ""}
       Create a simple, encouraging workout plan and nutritional guide for:
       - Age: ${age}
@@ -114,7 +115,7 @@ export async function POST(req: Request) {
     }
     
     const client = await clientPromise;
-    const db = client.db("fitai_db");
+    const db = client.db("svora_db");
     
     await db.collection("routines").insertOne({
       userId: session.user.id,
