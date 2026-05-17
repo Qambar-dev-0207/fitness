@@ -25,6 +25,12 @@ jest.mock('@openrouter/sdk', () => ({
 
 import { POST } from '@/app/api/analyze-body/route';
 
+function makeStream(content: string) {
+  return (async function* () {
+    yield { choices: [{ delta: { content } }] };
+  })();
+}
+
 const validBody = {
   beforeImage: 'data:image/jpeg;base64,beforedata',
   currentImage: 'data:image/jpeg;base64,currentdata',
@@ -78,9 +84,7 @@ describe('POST /api/analyze-body', () => {
 
   it('returns analysis on valid request', async () => {
     mockGetSession.mockResolvedValue({ user: { id: '123' } });
-    mockChatSend.mockResolvedValue({
-      choices: [{ message: { content: JSON.stringify(mockAnalysis) } }],
-    });
+    mockChatSend.mockImplementation(() => Promise.resolve(makeStream(JSON.stringify(mockAnalysis))));
     mockInsertOne.mockResolvedValue({ insertedId: 'report-id' });
 
     const res = await POST(makeRequest(validBody));
@@ -93,9 +97,7 @@ describe('POST /api/analyze-body', () => {
 
   it('saves analysis to DB', async () => {
     mockGetSession.mockResolvedValue({ user: { id: '123' } });
-    mockChatSend.mockResolvedValue({
-      choices: [{ message: { content: JSON.stringify(mockAnalysis) } }],
-    });
+    mockChatSend.mockImplementation(() => Promise.resolve(makeStream(JSON.stringify(mockAnalysis))));
     mockInsertOne.mockResolvedValue({ insertedId: 'id' });
 
     await POST(makeRequest(validBody));

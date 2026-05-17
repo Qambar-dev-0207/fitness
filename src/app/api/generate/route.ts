@@ -101,16 +101,22 @@ export async function POST(req: Request) {
 
     const { data: planData, validated, attempts, validationErrors } = await withAIRetry({
       callAI: async (correctionHint) => {
-        const response = await withTimeout(
-          openrouter.chat.send({
+        const collectStream = async (): Promise<string> => {
+          const stream = await openrouter.chat.send({
             model: modelId,
             messages: messages(correctionHint),
             max_tokens: 2500,
-          }),
-          22000 // 22s — leaves headroom within Netlify's 26s limit
-        );
-        const content = response.choices[0]?.message?.content;
-        return typeof content === "string" ? content : "";
+            stream: true,
+          }) as AsyncIterable<{ choices: Array<{ delta: { content?: string } }> }>;
+
+          let text = "";
+          for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content;
+            if (content) text += content;
+          }
+          return text;
+        };
+        return withTimeout(collectStream(), 22000);
       },
       parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateWorkoutPlan,

@@ -25,6 +25,12 @@ jest.mock('@openrouter/sdk', () => ({
 
 import { POST } from '@/app/api/generate/route';
 
+function makeStream(content: string) {
+  return (async function* () {
+    yield { choices: [{ delta: { content } }] };
+  })();
+}
+
 const validBody = {
   age: '25',
   height: '180cm',
@@ -41,7 +47,15 @@ const mockPlan = {
   summary: 'A great plan',
   detectedBodyType: null,
   biometricProjections: { muscleMassDelta: '+2lbs', bodyFatDelta: '-1%', timeline: '12 Weeks' },
-  weeklyStructure: [],
+  weeklyStructure: [
+    {
+      day: 'Monday',
+      focus: 'Chest',
+      exercises: [
+        { name: 'Bench Press', sets: 3, reps: '8-10', rpe: 7, notes: 'Control descent', videoQuery: 'bench press form' }
+      ]
+    }
+  ],
   nutrition: { calories: '2500', protein: '180g', carbs: '300g', fats: '80g', advice: 'Eat well' },
 };
 
@@ -79,9 +93,7 @@ describe('POST /api/generate', () => {
 
   it('returns plan data on successful generation', async () => {
     mockGetSession.mockResolvedValue({ user: { id: '123' } });
-    mockChatSend.mockResolvedValue({
-      choices: [{ message: { content: JSON.stringify(mockPlan) } }],
-    });
+    mockChatSend.mockImplementation(() => Promise.resolve(makeStream(JSON.stringify(mockPlan))));
     mockInsertOne.mockResolvedValue({ insertedId: 'routine-id' });
 
     const res = await POST(makeRequest(validBody));
@@ -93,9 +105,7 @@ describe('POST /api/generate', () => {
 
   it('saves plan to DB with userId', async () => {
     mockGetSession.mockResolvedValue({ user: { id: 'user-123' } });
-    mockChatSend.mockResolvedValue({
-      choices: [{ message: { content: JSON.stringify(mockPlan) } }],
-    });
+    mockChatSend.mockImplementation(() => Promise.resolve(makeStream(JSON.stringify(mockPlan))));
     mockInsertOne.mockResolvedValue({ insertedId: 'id' });
 
     await POST(makeRequest(validBody));
@@ -107,9 +117,7 @@ describe('POST /api/generate', () => {
 
   it('handles malformed AI JSON response gracefully', async () => {
     mockGetSession.mockResolvedValue({ user: { id: '123' } });
-    mockChatSend.mockResolvedValue({
-      choices: [{ message: { content: 'not json at all' } }],
-    });
+    mockChatSend.mockImplementation(() => Promise.resolve(makeStream('not json at all')));
 
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(500);

@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const { data: analysis, validated, attempts, validationErrors } = await withAIRetry({
       callAI: async (correctionHint) => {
-        const response = await openrouter.chat.send({
+        const stream = await openrouter.chat.send({
           model: "google/gemini-2.0-flash-exp:free",
           messages: [
             {
@@ -47,10 +47,16 @@ export async function POST(request: Request) {
                 { type: "image_url", imageUrl: { url: currentImage } }
               ]
             }
-          ]
-        });
-        const content = response.choices[0]?.message?.content;
-        return typeof content === "string" ? content : "";
+          ],
+          stream: true,
+        }) as AsyncIterable<{ choices: Array<{ delta: { content?: string } }> }>;
+
+        let text = "";
+        for await (const chunk of stream) {
+          const content = chunk.choices[0]?.delta?.content;
+          if (content) text += content;
+        }
+        return text;
       },
       parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateBodyAnalysis,
