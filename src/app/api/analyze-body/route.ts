@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { OpenRouter } from '@openrouter/sdk';
+import { Groq } from 'groq-sdk';
 import clientPromise from '@/lib/mongodb';
 import { getSession } from '@/lib/auth';
 import { validateBodyAnalysis, extractJson, withAIRetry } from '@/lib/ai-validator';
 
-const openrouter = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY || ""
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY || ""
 });
 
 export async function POST(request: Request) {
@@ -36,22 +36,22 @@ export async function POST(request: Request) {
 
     const { data: analysis, validated, attempts, validationErrors } = await withAIRetry({
       callAI: async (correctionHint) => {
-        const stream = await openrouter.chat.send({
-          chatGenerationParams: {
-            model: "google/gemma-4-27b-it:free",
-            messages: [
-              {
-                role: "user",
-                content: [
-                  { type: "text", text: basePrompt + correctionHint },
-                  { type: "image_url", imageUrl: { url: beforeImage } },
-                  { type: "image_url", imageUrl: { url: currentImage } }
-                ]
-              }
-            ],
-            stream: true,
-          },
-        }) as AsyncIterable<{ choices: Array<{ delta: { content?: string } }> }>;
+        const stream = await groq.chat.completions.create({
+          // Using llama-4-scout for multimodal analysis.
+          model: "meta-llama/llama-4-scout-17b-16e-instruct",
+          messages: [
+            {
+              role: "user",
+              content: [
+                { type: "text", text: basePrompt + correctionHint },
+                { type: "image_url", image_url: { url: beforeImage } },
+                { type: "image_url", image_url: { url: currentImage } }
+              ]
+            }
+          ],
+          stream: true,
+          response_format: { type: "json_object" }
+        });
 
         let text = "";
         for await (const chunk of stream) {

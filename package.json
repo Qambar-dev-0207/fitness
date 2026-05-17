@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "smoke:ai": "node scripts/smoke-ai.js"
   },
   "dependencies": {
     "@mediapipe/camera_utils": "^0.3.1675466862",
@@ -19,6 +20,7 @@
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^12.34.1",
+    "groq-sdk": "^1.2.0",
     "jose": "^6.1.3",
     "lucide-react": "^0.574.0",
     "mongodb": "^7.1.0",

@@ -1,11 +1,11 @@
-import { OpenRouter } from "@openrouter/sdk";
+import { Groq } from "groq-sdk";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import clientPromise from "@/lib/mongodb";
 import { validateWorkoutPlan, extractJson, withAIRetry } from "@/lib/ai-validator";
 
-const openrouter = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY || ""
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY || ""
 });
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +21,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.OPENROUTER_API_KEY) {
+  if (!process.env.GROQ_API_KEY) {
     return NextResponse.json({ error: "API Key Configuration Error" }, { status: 500 });
   }
   try {
@@ -86,14 +86,15 @@ export async function POST(req: Request) {
       Generate 4 distinct training days. sets must be an integer 1-20. rpe must be 1-10.
     `;
 
-    const modelId = "google/gemma-4-27b-it:free";
+    // Using llama-3.3-70b-versatile for high reasoning and efficiency.
+    const modelId = "llama-3.3-70b-versatile";
 
     const messages = (correctionHint: string) => [
       {
         role: "user" as const,
         content: image ? [
           { type: "text" as const, text: basePrompt + correctionHint },
-          { type: "image_url" as const, imageUrl: { url: image } }
+          { type: "image_url" as const, image_url: { url: image } }
         ] : basePrompt + correctionHint
       }
     ];
@@ -101,14 +102,13 @@ export async function POST(req: Request) {
     const { data: planData, validated, attempts, validationErrors } = await withAIRetry({
       callAI: async (correctionHint) => {
         const collectStream = async (): Promise<string> => {
-          const stream = await openrouter.chat.send({
-            chatGenerationParams: {
-              model: modelId,
-              messages: messages(correctionHint),
-              maxTokens: 2500,
-              stream: true,
-            },
-          }) as AsyncIterable<{ choices: Array<{ delta: { content?: string } }> }>;
+          const stream = await groq.chat.completions.create({
+            model: modelId,
+            messages: messages(correctionHint),
+            max_tokens: 2500,
+            stream: true,
+            response_format: { type: "json_object" }
+          });
 
           let text = "";
           for await (const chunk of stream) {
@@ -121,7 +121,7 @@ export async function POST(req: Request) {
       },
       parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateWorkoutPlan,
-      maxRetries: 1, // max 2 total attempts — keeps total time under 26s
+      maxRetries: 1, 
     });
 
     if (!validated) {
