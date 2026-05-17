@@ -1,26 +1,95 @@
 @import "tailwindcss";
 
+@theme {
+  /* High-Definition Palette */
+  --color-onyx: #020202;
+  --color-void: #000000;
+  --color-gold-leaf: #D4AF37;
+  --color-mercury: #E5E5E5;
+  --color-emerald-glow: #10B981;
+  
+  --font-display: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --ease-ultra: cubic-bezier(0.85, 0, 0.15, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #000000;
+  --foreground: #E5E5E5;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* --- THE BLUEPRINT GRID --- */
+.blueprint-grid {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+}
+
+/* --- SPECTRAL LIGHT LEAKS --- */
+.light-leak {
+  position: fixed;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 60%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* --- BENTO LUXE CARDS --- */
+.bento-luxe {
+  @apply relative overflow-hidden bg-white/[0.02] border border-white/10 rounded-[40px] p-10 transition-all duration-700;
+  backdrop-filter: blur(20px);
+}
+
+.bento-luxe:hover {
+  @apply border-white/30 bg-white/[0.05];
+  box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8);
+}
+
+/* --- HUD PANEL (New) --- */
+.hud-panel {
+  @apply border-l border-white/10 bg-gradient-to-l from-white/[0.02] to-transparent backdrop-blur-sm;
+}
+
+/* --- KINETIC BUTTON --- */
+.btn-kinetic {
+  @apply relative px-10 py-5 overflow-hidden rounded-full border border-white/20 text-white font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700;
+}
+
+.btn-kinetic:hover {
+  @apply border-gold-leaf shadow-[0_0_30px_rgba(212,175,55,0.3)];
+}
+
+.btn-kinetic::before {
+  content: '';
+  @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-500;
+}
+
+.btn-kinetic:hover::before {
+  @apply opacity-10;
+}
+
+/* --- TEXT REVEAL SHADER --- */
+.text-reveal-mask {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+  animation: reveal 2s var(--ease-ultra) forwards;
+}
+
+@keyframes reveal {
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 }
