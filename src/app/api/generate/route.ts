@@ -2,6 +2,7 @@ import { OpenRouter } from "@openrouter/sdk";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import clientPromise from "@/lib/mongodb";
+import { validateWorkoutPlan, extractJson, withAIRetry } from "@/lib/ai-validator";
 
 const openrouter = new OpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY || ""
@@ -23,9 +24,9 @@ export async function POST(req: Request) {
 
     const isAIGeneratedBodyType = bodyType === "AI_ANALYSIS_REQUESTED";
 
-    const prompt = `
+    const basePrompt = `
       You are a friendly, expert personal trainer for SVORA Wellness.
- 
+
       ${isAIGeneratedBodyType && image ? "I have provided an image of my body. Please first analyze my body type (Ectomorph, Mesomorph, Endomorph, Skinny-Fat, or Athletic Lean) based on the visual evidence." : ""}
       Create a simple, encouraging workout plan and nutritional guide for:
       - Age: ${age}
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
       - Routine: ${fasting ? "Intermittent Fasting (16:8)" : "Standard eating schedule"}
 
       Use layman terms. Avoid technical jargon.
-      Output the plan in STRICT JSON format:
+      Output the plan in STRICT JSON format (no markdown, no extra text):
       {
         "planTitle": "string",
         "summary": "string",
@@ -52,11 +53,11 @@ export async function POST(req: Request) {
             "day": "string",
             "focus": "string",
             "exercises": [
-              { 
+              {
                 "name": "string",
-                "sets": number, 
-                "reps": "string", 
-                "rpe": number, 
+                "sets": number,
+                "reps": "string",
+                "rpe": number,
                 "notes": "string",
                 "videoQuery": "string"
               }
@@ -72,83 +73,56 @@ export async function POST(req: Request) {
         }
       }
 
-      Generate 4 distinct training days. Focus on clarity and motivation.
+      Generate 4 distinct training days. sets must be an integer 1-20. rpe must be 1-10.
     `;
 
-    // Use Trinity Large for text generation primarily, fallback to Gemini 2.0 Flash for vision
     const modelId = image ? "google/gemini-2.0-flash-exp:free" : "arcee-ai/trinity-large-preview:free";
 
-    const messages = [
+    const messages = (correctionHint: string) => [
       {
         role: "user" as const,
         content: image ? [
-          { type: "text" as const, text: prompt },
+          { type: "text" as const, text: basePrompt + correctionHint },
           { type: "image_url" as const, imageUrl: { url: image } }
-        ] : prompt
+        ] : basePrompt + correctionHint
       }
     ];
 
-    const response = await openrouter.chat.send({
-      chatGenerationParams: {
-        model: modelId,
-        messages: messages,
-      }
+    const { data: planData, validated, attempts, validationErrors } = await withAIRetry({
+      callAI: async (correctionHint) => {
+        const response = await openrouter.chat.send({
+          chatGenerationParams: {
+            model: modelId,
+            messages: messages(correctionHint),
+          }
+        });
+        const content = response.choices[0]?.message?.content;
+        return typeof content === "string" ? content : "";
+      },
+      parse: (text) => extractJson(text) as any,
+      validate: validateWorkoutPlan,
+      maxRetries: 2,
     });
 
-    const content = response.choices[0]?.message?.content;
-    const fullResponse = typeof content === "string" ? content : "";
-    
-    // Attempt to extract JSON from the response
-    let planData;
-    try {
-      const jsonMatch = fullResponse.match(/\{[\s\S]*\}/);
-      planData = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(fullResponse);
-    } catch (parseError: unknown) {
-      const error = parseError as Error;
-      console.error("JSON Parse Error. Raw Response:", fullResponse, "Error:", error.message);
-      throw new Error(`AI Response Parsing Failed: ${error.message}`);
+    if (!validated) {
+      console.warn(`[generate] Plan returned with validation issues after ${attempts} attempt(s):`, validationErrors);
     }
 
-    // Persist to database
     const client = await clientPromise;
     const db = client.db("svora_db");
-    
+
     await db.collection("routines").insertOne({
       userId: session.user.id,
       ...planData,
+      _aiValidated: validated,
+      _aiAttempts: attempts,
       createdAt: new Date()
     });
 
     return NextResponse.json(planData);
   } catch (e: unknown) {
-    let errorMessage = "Failed to generate wellness protocol";
-    let errorStack = "";
-    let errorDetails: unknown = null;
-
-    if (e instanceof Error) {
-      errorMessage = e.message;
-      errorStack = e.stack || "";
-      errorDetails = (e as Record<string, any>).response?.data || null;
-    } else {
-      errorMessage = String(e);
-    }
-
-    console.error("GENERATE_API_CRITICAL_ERROR:", {
-      message: errorMessage,
-      stack: errorStack,
-      details: errorDetails
-    });
-
-    return new NextResponse(
-      JSON.stringify({ 
-        error: errorMessage,
-        details: errorDetails,
-        success: false
-      }), 
-      { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    console.error("GENERATE_API_ERROR:", errorMessage);
+    return NextResponse.json({ error: errorMessage, success: false }, { status: 500 });
   }
 }
