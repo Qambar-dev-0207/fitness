@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[functions]
+  # Max allowed timeout for synchronous Netlify functions is 26s.
+  # AI generation calls can take 10-20s on free-tier models.
+  timeout = 26
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

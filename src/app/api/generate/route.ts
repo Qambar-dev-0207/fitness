@@ -10,6 +10,16 @@ const openrouter = new OpenRouter({
 
 export const dynamic = 'force-dynamic';
 
+// Hard timeout per AI call so a hanging model never causes a 502
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`AI request timed out after ${ms / 1000}s`)), ms)
+    ),
+  ]);
+}
+
 export async function POST(req: Request) {
   if (!process.env.OPENROUTER_API_KEY) {
     return NextResponse.json({ error: "API Key Configuration Error" }, { status: 500 });
@@ -42,7 +52,7 @@ export async function POST(req: Request) {
       {
         "planTitle": "string",
         "summary": "string",
-        "detectedBodyType": "string (only if image was provided, else null)",
+        "detectedBodyType": "string or null",
         "biometricProjections": {
           "muscleMassDelta": "string",
           "bodyFatDelta": "string",
@@ -76,7 +86,8 @@ export async function POST(req: Request) {
       Generate 4 distinct training days. sets must be an integer 1-20. rpe must be 1-10.
     `;
 
-    const modelId = image ? "google/gemini-2.0-flash-exp:free" : "arcee-ai/trinity-large-preview:free";
+    // Gemini 2.0 Flash is fast, reliable, and handles both text and vision
+    const modelId = "google/gemini-2.0-flash-exp:free";
 
     const messages = (correctionHint: string) => [
       {
@@ -90,18 +101,22 @@ export async function POST(req: Request) {
 
     const { data: planData, validated, attempts, validationErrors } = await withAIRetry({
       callAI: async (correctionHint) => {
-        const response = await openrouter.chat.send({
-          chatGenerationParams: {
-            model: modelId,
-            messages: messages(correctionHint),
-          }
-        });
+        const response = await withTimeout(
+          openrouter.chat.send({
+            chatGenerationParams: {
+              model: modelId,
+              messages: messages(correctionHint),
+              max_tokens: 2500,
+            }
+          }),
+          22000 // 22s — leaves headroom within Netlify's 26s limit
+        );
         const content = response.choices[0]?.message?.content;
         return typeof content === "string" ? content : "";
       },
       parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateWorkoutPlan,
-      maxRetries: 2,
+      maxRetries: 1, // max 2 total attempts — keeps total time under 26s
     });
 
     if (!validated) {
