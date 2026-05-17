@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         const content = response.choices[0]?.message?.content;
         return typeof content === "string" ? content : "";
       },
-      parse: (text) => extractJson(text) as any,
+      parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateBodyAnalysis,
       maxRetries: 2,
     });

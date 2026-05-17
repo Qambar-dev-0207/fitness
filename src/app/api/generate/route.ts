@@ -99,7 +99,7 @@ export async function POST(req: Request) {
         const content = response.choices[0]?.message?.content;
         return typeof content === "string" ? content : "";
       },
-      parse: (text) => extractJson(text) as any,
+      parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateWorkoutPlan,
       maxRetries: 2,
     });
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
 
     await db.collection("routines").insertOne({
       userId: session.user.id,
-      ...planData,
+      ...(planData as Record<string, unknown>),
       _aiValidated: validated,
       _aiAttempts: attempts,
       createdAt: new Date()
