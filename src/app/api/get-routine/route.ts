@@ -4,7 +4,7 @@ import { getSession } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const session = await getSession();
+    const session = await getSession() as any;
     const userId = session?.user?.id || "guest";
 
     const client = await clientPromise;

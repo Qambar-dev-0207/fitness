@@ -109,7 +109,7 @@ export async function POST(req: Request) {
     }
 
     // Persist to database
-    const session = await getSession();
+    const session = await getSession() as any;
     if (!session) {
       return NextResponse.json({ error: "Unauthorized access detected." }, { status: 401 });
     }
