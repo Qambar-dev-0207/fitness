@@ -37,19 +37,17 @@ export async function POST(request: Request) {
     const { data: analysis, validated, attempts, validationErrors } = await withAIRetry({
       callAI: async (correctionHint) => {
         const response = await openrouter.chat.send({
-          chatGenerationParams: {
-            model: "google/gemini-2.0-flash-exp:free",
-            messages: [
-              {
-                role: "user",
-                content: [
-                  { type: "text", text: basePrompt + correctionHint },
-                  { type: "image_url", imageUrl: { url: beforeImage } },
-                  { type: "image_url", imageUrl: { url: currentImage } }
-                ]
-              }
-            ]
-          }
+          model: "google/gemini-2.0-flash-exp:free",
+          messages: [
+            {
+              role: "user",
+              content: [
+                { type: "text", text: basePrompt + correctionHint },
+                { type: "image_url", imageUrl: { url: beforeImage } },
+                { type: "image_url", imageUrl: { url: currentImage } }
+              ]
+            }
+          ]
         });
         const content = response.choices[0]?.message?.content;
         return typeof content === "string" ? content : "";

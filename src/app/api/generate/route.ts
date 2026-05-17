@@ -103,11 +103,9 @@ export async function POST(req: Request) {
       callAI: async (correctionHint) => {
         const response = await withTimeout(
           openrouter.chat.send({
-            chatGenerationParams: {
-              model: modelId,
-              messages: messages(correctionHint),
-              max_tokens: 2500,
-            }
+            model: modelId,
+            messages: messages(correctionHint),
+            max_tokens: 2500,
           }),
           22000 // 22s — leaves headroom within Netlify's 26s limit
         );
