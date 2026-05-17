@@ -3,14 +3,14 @@ import { MongoClient } from 'mongodb';
 // --- MOCK DB IMPLEMENTATION FOR SIMULATION MODE ---
 class MockCollection {
   name: string;
-  data: unknown[];
+  data: any[];
 
   constructor(name: string) {
     this.name = name;
     // Persist in global for dev hot-reloads
     const globalStore = (global as any)._mockData || {};
     if (!globalStore[name]) globalStore[name] = [];
-    this.data = globalStore[name] as unknown[];
+    this.data = globalStore[name] as any[];
     (global as any)._mockData = globalStore;
   }
 
@@ -30,7 +30,7 @@ class MockCollection {
       sort: (sortQuery: any) => {
         const key = Object.keys(sortQuery)[0];
         const dir = sortQuery[key];
-        results.sort((a, b) => dir === -1 ? (b[key] > a[key] ? 1 : -1) : (a[key] > b[key] ? 1 : -1));
+        results.sort((a: any, b: any) => dir === -1 ? (b[key] > a[key] ? 1 : -1) : (a[key] > b[key] ? 1 : -1));
         return {
           limit: (n: number) => ({
             toArray: async () => results.slice(0, n),
@@ -87,12 +87,12 @@ if (isPlaceholder) {
     };
 
     if (!globalWithMongo._mongoClientPromise) {
-      const client = new MongoClient(uri, options);
+      const client = new MongoClient(uri!, options);
       globalWithMongo._mongoClientPromise = client.connect();
     }
     clientPromise = globalWithMongo._mongoClientPromise;
   } else {
-    const client = new MongoClient(uri, options);
+    const client = new MongoClient(uri!, options);
     clientPromise = client.connect();
   }
 }
