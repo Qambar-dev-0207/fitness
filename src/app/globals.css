@@ -18,30 +18,101 @@
   --ease-ultra: cubic-bezier(0.85, 0, 0.15, 1);
 }
 
+/* ── Theme CSS Variables ─────────────────────────────────────────────────── */
+
 :root {
-  --background: #000000;
-  --foreground: #E5E5E5;
+  /* Dark mode (default) */
+  --bg-page:     #020202;
+  --fg-page:     #E5E5E5;
+  --bg-card:     rgba(255, 255, 255, 0.03);
+  --border-card: rgba(255, 255, 255, 0.08);
+  --fg-muted:    rgba(255, 255, 255, 0.25);
+  --fg-submuted: rgba(255, 255, 255, 0.1);
+  --bg-input:    rgba(255, 255, 255, 0.02);
+  --border-input: rgba(255, 255, 255, 0.06);
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
 }
 
+:root.light {
+  /* Light mode — warm ivory luxury */
+  --bg-page:     #F3EDE3;
+  --fg-page:     #1C1C1C;
+  --bg-card:     rgba(255, 255, 255, 0.82);
+  --border-card: rgba(0, 0, 0, 0.07);
+  --fg-muted:    rgba(0, 0, 0, 0.45);
+  --fg-submuted: rgba(0, 0, 0, 0.2);
+  --bg-input:    rgba(0, 0, 0, 0.03);
+  --border-input: rgba(0, 0, 0, 0.09);
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--bg-page);
+  color: var(--fg-page);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   cursor: none;
   overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* --- THE BLUEPRINT GRID --- */
+/* ── Light-mode overrides for common Tailwind color utilities ────────────── */
+
+:root.light .bg-onyx,
+:root.light .bg-void {
+  background-color: var(--bg-page) !important;
+}
+
+:root.light .text-mercury {
+  color: var(--fg-page) !important;
+}
+
+/* Headings that use text-white */
+:root.light h1,
+:root.light h2,
+:root.light h3 {
+  color: var(--fg-page);
+}
+
+/* Muted/ghost text */
+:root.light .text-white\/20 { color: var(--fg-muted) !important; }
+:root.light .text-white\/30 { color: var(--fg-muted) !important; }
+:root.light .text-white\/40 { color: var(--fg-muted) !important; }
+:root.light .text-white\/10 { color: var(--fg-submuted) !important; }
+
+/* Borders */
+:root.light .border-white\/5  { border-color: var(--border-card) !important; }
+:root.light .border-white\/10 { border-color: var(--border-card) !important; }
+:root.light .border-white\/20 { border-color: rgba(0,0,0,0.12) !important; }
+
+/* Body text that should darken */
+:root.light .text-white {
+  color: var(--fg-page);
+}
+
+/* Explicit white text on dark buttons — preserve */
+:root.light .text-void { color: #000 !important; }
+
+/* ── Blueprint Grid ──────────────────────────────────────────────────────── */
+
 .blueprint-grid {
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 60px 60px;
   mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
 }
 
-/* --- SPECTRAL LIGHT LEAKS --- */
+:root.light .blueprint-grid {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+/* ── Light Leak ──────────────────────────────────────────────────────────── */
+
 .light-leak {
   position: fixed;
   width: 80vw;
@@ -53,41 +124,61 @@ body {
   opacity: 0.6;
 }
 
-/* --- BENTO LUXE CARDS --- */
+:root.light .light-leak {
+  opacity: 0.25;
+}
+
+/* ── Bento Luxe Cards ────────────────────────────────────────────────────── */
+
 .bento-luxe {
-  @apply relative overflow-hidden bg-white/[0.02] border border-white/10 rounded-[40px] p-10 transition-all duration-700;
+  @apply relative overflow-hidden rounded-[40px] p-10 transition-all duration-700;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
   backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-card);
 }
 
 .bento-luxe:hover {
-  @apply border-white/30 bg-white/[0.05];
-  box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8);
+  box-shadow: 0 30px 60px -15px rgba(0,0,0,0.15);
 }
 
-/* --- HUD PANEL (New) --- */
+:root.light .bento-luxe:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+/* ── HUD Panel ───────────────────────────────────────────────────────────── */
+
 .hud-panel {
-  @apply border-l border-white/10 bg-gradient-to-l from-white/[0.02] to-transparent backdrop-blur-sm;
+  @apply border-l backdrop-blur-sm;
+  border-color: var(--border-card);
+  background: linear-gradient(to left, var(--bg-input), transparent);
 }
 
-/* --- KINETIC BUTTON --- */
+/* ── Kinetic Button ──────────────────────────────────────────────────────── */
+
 .btn-kinetic {
-  @apply relative px-10 py-5 overflow-hidden rounded-full border border-white/20 text-white font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700;
+  @apply relative px-10 py-5 overflow-hidden rounded-full font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700;
+  border: 1px solid var(--border-card);
+  color: var(--fg-page);
 }
 
 .btn-kinetic:hover {
-  @apply border-gold-leaf shadow-[0_0_30px_rgba(212,175,55,0.3)];
+  @apply shadow-[0_0_30px_rgba(212,175,55,0.3)];
+  border-color: var(--color-gold-leaf);
 }
 
 .btn-kinetic::before {
   content: '';
-  @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-500;
+  @apply absolute inset-0 opacity-0 transition-opacity duration-500;
+  background: var(--fg-page);
 }
 
 .btn-kinetic:hover::before {
-  @apply opacity-10;
+  opacity: 0.05;
 }
 
-/* --- TEXT REVEAL SHADER --- */
+/* ── Text Reveal ─────────────────────────────────────────────────────────── */
+
 .text-reveal-mask {
   clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
   animation: reveal 2s var(--ease-ultra) forwards;
@@ -97,22 +188,46 @@ body {
   to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 }
 
-/* --- GLASS CARD --- */
+/* ── Glass Card ──────────────────────────────────────────────────────────── */
+
 .glass-card {
-  @apply relative overflow-hidden bg-white/[0.03] border border-white/10 rounded-[2rem] transition-all duration-500;
+  @apply relative overflow-hidden rounded-[2rem] transition-all duration-500;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
   backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-card);
 }
 
 .glass-card:hover {
-  @apply border-white/20 bg-white/[0.05];
+  border-color: rgba(212, 175, 55, 0.2);
 }
 
-/* --- MAGNETIC BUTTON --- */
+/* ── Theme-aware Input ───────────────────────────────────────────────────── */
+
+.theme-input {
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  color: var(--fg-page);
+  transition: border-color 0.3s ease;
+}
+
+.theme-input::placeholder {
+  color: var(--fg-muted);
+}
+
+.theme-input:focus {
+  border-color: rgba(212, 175, 55, 0.5);
+  outline: none;
+}
+
+/* ── Magnetic Button ─────────────────────────────────────────────────────── */
+
 .btn-magnetic {
   @apply relative overflow-hidden transition-all duration-500;
 }
 
-/* --- ORGANIC NOISE OVERLAY --- */
+/* ── Organic Noise Overlay ───────────────────────────────────────────────── */
+
 .organic-noise {
   position: fixed;
   inset: 0;
@@ -123,7 +238,8 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* --- LIQUID BG --- */
+/* ── Liquid Background ───────────────────────────────────────────────────── */
+
 .liquid-bg {
   position: fixed;
   inset: 0;
@@ -131,4 +247,31 @@ body {
               radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
+}
+
+:root.light .liquid-bg {
+  background: radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(0, 0, 0, 0.01) 0%, transparent 50%);
+}
+
+/* ── Theme Toggle Button ─────────────────────────────────────────────────── */
+
+.theme-toggle-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  padding: 0.65rem;
+  border-radius: 9999px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  transition: border-color 0.3s ease, background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+}
+
+.theme-toggle-btn:hover {
+  border-color: rgba(212, 175, 55, 0.5);
 }
