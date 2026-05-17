@@ -14,11 +14,11 @@ const steps = [
 ];
 
 const bodyTypeInfo: Record<string, string> = {
-  Skinny: "Low muscle mass and low body fat. Often characterized by a fast metabolism and difficulty gaining weight.",
-  Athletic: "Naturally muscular with a broad frame and low body fat. Responds quickly to weight training.",
-  Heavy: "Higher body fat percentage with a sturdy, robust frame. Naturally strong with a slower metabolism.",
-  Average: "A balanced mix of muscle and fat. Proportions are typical and respond well to varied training.",
-  Lean: "Visible muscle definition with very low body fat. Focus is usually on maintaining density and tone."
+  Skinny: "Naturally thin with a fast metabolism. Tends to have a hard time gaining weight or muscle.",
+  Athletic: "Naturally muscular and broad. Gains muscle quickly and responds well to any training style.",
+  Heavy: "Carries more body fat with a solid, strong frame. Responds well to strength training.",
+  Average: "A balanced mix of muscle and fat. Adapts well to almost any workout routine.",
+  Lean: "Low body fat with visible muscle. Usually focused on staying toned and maintaining definition."
 };
 
 const LoadingIndicator = () => (
@@ -38,9 +38,9 @@ const LoadingIndicator = () => (
       </motion.div>
     </div>
     <div className="space-y-4">
-      <h2 className="text-4xl font-serif italic text-white tracking-tight">Generating Your Plan</h2>
+      <h2 className="text-4xl font-serif italic text-white tracking-tight">Building Your Plan</h2>
       <div className="flex justify-center gap-2">
-        <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Analyzing Your Data...</span>
+        <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">This takes a few seconds...</span>
       </div>
     </div>
   </div>
@@ -79,8 +79,11 @@ export default function UplinkPage() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, image: reader.result as string }));
-        if (!formData.bodyType) updateData("bodyType", "AI_ANALYSIS_REQUESTED");
+        setFormData(prev => ({
+          ...prev,
+          image: reader.result as string,
+          bodyType: prev.bodyType || "AI_ANALYSIS_REQUESTED",
+        }));
       };
       reader.readAsDataURL(file);
     }
@@ -137,7 +140,7 @@ export default function UplinkPage() {
       case 0:
         return (
           <div className="space-y-16 max-w-4xl w-full text-center">
-            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">Your Metrics.</h2>
+            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">Your Stats.</h2>
             <div className="grid md:grid-cols-3 gap-12">
               {["age", "weight", "height"].map((field) => (
                 <div key={field} className="space-y-4 group">
@@ -153,7 +156,7 @@ export default function UplinkPage() {
                 </div>
               ))}
             </div>
-            <p className="text-[9px] font-mono uppercase tracking-widest text-white/20">Press Enter to Proceed</p>
+            <p className="text-[9px] font-mono uppercase tracking-widest text-white/20">Press Enter to continue</p>
           </div>
         );
       case 1:
@@ -167,13 +170,13 @@ export default function UplinkPage() {
                   <>
                     <img src={formData.image} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000" alt="Preview" />
                     <div className="relative z-10 px-6 py-3 rounded-full bg-onyx/80 backdrop-blur border border-white/10 text-[9px] font-mono tracking-[0.3em] uppercase text-gold-leaf">
-                      Analysis in Progress
+                      AI will detect your body type
                     </div>
                   </>
                 ) : (
                   <div className="flex flex-col items-center gap-4">
                     <Camera size={32} className="text-white/40 group-hover:text-gold-leaf transition-colors" />
-                    <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Upload Body Photo (Optional)</span>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Upload a photo (optional)</span>
                   </div>
                 )}
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
@@ -209,7 +212,7 @@ export default function UplinkPage() {
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Info size={14} className="text-gold-leaf" />
-                    <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-gold-leaf">{hoveredBodyType} Profiling</span>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-gold-leaf">{hoveredBodyType} Type</span>
                   </div>
                   <p className="text-xs text-white/70 italic font-serif leading-relaxed">
                     {bodyTypeInfo[hoveredBodyType]}
@@ -222,13 +225,13 @@ export default function UplinkPage() {
       case 2:
         return (
           <div className="space-y-16 max-w-6xl w-full text-center">
-            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">Fitness Goal.</h2>
+            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">What's Your Goal?</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { id: "Hypertrophy", label: "Muscle", sub: "Build Size" },
-                { id: "Lean", label: "Fat Loss", sub: "Weight Loss" },
-                { id: "Power", label: "Power", sub: "Force" },
-                { id: "Custom", label: "Custom", sub: "Your Own Goal" }
+                { id: "Hypertrophy", label: "Build Muscle", sub: "Get bigger and stronger" },
+                { id: "Lean", label: "Lose Fat", sub: "Burn fat and tone up" },
+                { id: "Power", label: "Get Stronger", sub: "Build raw power" },
+                { id: "Custom", label: "Custom", sub: "Set your own goal" }
               ].map((goal) => (
                 <button
                   key={goal.id}
@@ -263,7 +266,7 @@ export default function UplinkPage() {
                   <input 
                     type="text"
                     autoFocus
-                    placeholder="Specify your unique objective..."
+                    placeholder="Describe your goal..."
                     value={formData.customGoal}
                     onChange={(e) => updateData("customGoal", e.target.value)}
                     className="w-full py-6 text-3xl font-serif italic text-center border-b border-gold-leaf/30 bg-transparent focus:outline-none focus:border-gold-leaf transition-all duration-500 placeholder:text-white/10 text-white"
@@ -276,11 +279,11 @@ export default function UplinkPage() {
       case 3:
         return (
           <div className="space-y-16 max-w-4xl w-full text-center">
-            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">Equipment.</h2>
+            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">Where Do You Train?</h2>
             <div className="grid md:grid-cols-2 gap-8">
               {[
-                { id: "Commercial Gym", label: "Full Gym", sub: "All Access" },
-                { id: "Home Training", label: "At Home", sub: "Dumbbells/Bodyweight" }
+                { id: "Commercial Gym", label: "Full Gym", sub: "All equipment available" },
+                { id: "Home Training", label: "At Home", sub: "Dumbbells or bodyweight" }
               ].map((loc) => (
                 <button
                   key={loc.id}
@@ -301,11 +304,11 @@ export default function UplinkPage() {
       case 4:
         return (
           <div className="space-y-16 max-w-2xl w-full mx-auto text-center">
-            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">Routine.</h2>
+            <h2 className="text-5xl md:text-7xl font-serif italic mb-8 text-white">Eating Schedule.</h2>
             <div className="p-12 rounded-[3rem] bg-white/[0.02] border border-white/10 flex items-center justify-between gap-12">
               <div className="text-left">
                 <div className="font-serif text-3xl italic text-white mb-2">Intermittent Fasting</div>
-                <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Include 16:8 Fasting Schedule</div>
+                <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Skip breakfast, eat within 8 hours</div>
               </div>
               <button 
                 onClick={() => updateData("fasting", !formData.fasting)}

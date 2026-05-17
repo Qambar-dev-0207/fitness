@@ -37,7 +37,7 @@ const PostureCorrector = ({ exercise, onComplete, onClose }: { exercise: any, on
     exerciseName: exercise.name.toLowerCase()
   });
 
-  const [uiFeedback, setFeedback] = useState("Aligning Neural Link...");
+  const [uiFeedback, setFeedback] = useState("Getting ready...");
   const [uiRepCount, setUiRepCount] = useState(0);
   const [uiSetCount, setUiSetCount] = useState(0);
   const [isRestingState, setIsRestingState] = useState(false);
@@ -99,7 +99,7 @@ const PostureCorrector = ({ exercise, onComplete, onClose }: { exercise: any, on
 
             const lm = results.poseLandmarks;
             const exName = stateRef.current.exerciseName;
-            let currentFeedback = "Somatic Sync Active";
+            let currentFeedback = "Tracking your movement";
 
             const runLogic = (angle: number, downThreshold: number, upThreshold: number, msg: string) => {
               if (angle < downThreshold && stateRef.current.movementDir === "up") {
@@ -180,7 +180,7 @@ const PostureCorrector = ({ exercise, onComplete, onClose }: { exercise: any, on
               }
             }
           } else {
-            setFeedback("Searching for Human Form...");
+            setFeedback("Step into frame...");
           }
           canvasCtx.restore();
         });
@@ -201,7 +201,7 @@ const PostureCorrector = ({ exercise, onComplete, onClose }: { exercise: any, on
         }
       } catch (err) {
         console.error("MediaPipe Init Error:", err);
-        setFeedback("Neural Link Failure");
+        setFeedback("Camera connection failed");
       }
     };
 
@@ -226,7 +226,7 @@ const PostureCorrector = ({ exercise, onComplete, onClose }: { exercise: any, on
              <div className="space-y-3">
                 <div className="flex items-center gap-3">
                    <div className={`w-2 h-2 rounded-full ${isRestingState ? "bg-white/20" : "bg-gold-leaf animate-pulse shadow-[0_0_15px_#D4AF37]"}`} />
-                   <span className="text-[10px] font-mono text-gold-leaf uppercase tracking-[0.5em]">{isRestingState ? "Rest Cycle" : "Neural Link: Active"}</span>
+                   <span className="text-[10px] font-mono text-gold-leaf uppercase tracking-[0.5em]">{isRestingState ? "Rest Time" : "Tracking Active"}</span>
                 </div>
                 <h4 className="text-4xl md:text-6xl font-serif italic text-white tracking-tighter">{exercise.name}</h4>
              </div>
@@ -246,18 +246,18 @@ const PostureCorrector = ({ exercise, onComplete, onClose }: { exercise: any, on
               <motion.div key="rest" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="absolute inset-0 flex flex-col items-center justify-center bg-gold-leaf/5 backdrop-blur-md pointer-events-auto">
                  <div className="text-center space-y-8">
                     <Zap size={48} className="mx-auto text-gold-leaf animate-bounce" />
-                    <h2 className="text-6xl font-serif italic text-white">Recovery Mode</h2>
+                    <h2 className="text-6xl font-serif italic text-white">Rest Time</h2>
                     <button onClick={() => setIsRestingState(false)} className="px-12 py-5 rounded-full bg-gold-leaf text-void font-bold uppercase tracking-[0.4em] text-[10px] hover:bg-white transition-all shadow-xl">Start Next Set</button>
                  </div>
               </motion.div>
             ) : (
               <div className="flex justify-between items-end">
                 <div className="p-6 glass-card border-gold-leaf/20 bg-gold-leaf/5 backdrop-blur-xl">
-                  <div className="text-[10px] font-mono text-gold-leaf uppercase tracking-[0.4em] mb-2">Live AI Feedback</div>
+                  <div className="text-[10px] font-mono text-gold-leaf uppercase tracking-[0.4em] mb-2">Live Feedback</div>
                   <div className="text-3xl font-serif italic text-white tracking-tight">{uiFeedback}</div>
                 </div>
                 <div className="text-right max-w-xs space-y-4">
-                    <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf/60">Technical Note</div>
+                    <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf/60">Form Tip</div>
                     <p className="text-sm italic font-serif text-white/70 leading-relaxed">{exercise.notes}</p>
                 </div>
               </div>
@@ -266,7 +266,7 @@ const PostureCorrector = ({ exercise, onComplete, onClose }: { exercise: any, on
         </div>
       </div>
       <div className="mt-12 flex gap-8">
-         <button onClick={onClose} className="px-16 py-6 rounded-full bg-white text-black font-bold uppercase tracking-[0.4em] text-[10px] hover:bg-black hover:text-white transition-all border border-transparent hover:border-white/20">Abort Session</button>
+         <button onClick={onClose} className="px-16 py-6 rounded-full bg-white text-black font-bold uppercase tracking-[0.4em] text-[10px] hover:bg-black hover:text-white transition-all border border-transparent hover:border-white/20">End Session</button>
       </div>
     </motion.div>
   );
@@ -342,7 +342,7 @@ export default function ProtocolPage() {
       <div className="min-h-screen flex items-center justify-center bg-jet-black">
         <div className="flex flex-col items-center gap-6">
           <div className="w-12 h-12 border border-white/10 border-t-gold-leaf rounded-full animate-spin" />
-          <span className="text-[10px] font-mono text-white/40 uppercase tracking-[0.5em]">Decrypting Protocol...</span>
+          <span className="text-[10px] font-mono text-white/40 uppercase tracking-[0.5em]">Loading your plan...</span>
         </div>
       </div>
     );
@@ -364,11 +364,11 @@ export default function ProtocolPage() {
             >
               <LayoutDashboard size={14} /> Dashboard
             </button>
-            <button 
+            <button
               onClick={() => setView("journal")}
               className={`text-[9px] font-mono uppercase tracking-[0.4em] flex items-center gap-2 transition-colors ${view === "journal" ? "text-gold-leaf" : "text-white/30 hover:text-white"}`}
             >
-              <BookOpen size={14} /> Somatic Journal
+              <BookOpen size={14} /> My Journal
             </button>
           </div>
         </div>
@@ -409,22 +409,22 @@ export default function ProtocolPage() {
                     <motion.div variants={fadeUp} className="space-y-4">
                       <div className="flex items-center gap-4">
                         <span className="w-12 h-[1px] bg-gold-leaf" />
-                        <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf">Private Dossier</span>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf">Your Profile</span>
                       </div>
-                      <h1 className="text-6xl md:text-9xl font-serif italic leading-[0.85] text-white tracking-tighter">Somatic <br /> Architecture.</h1>
+                      <h1 className="text-6xl md:text-9xl font-serif italic leading-[0.85] text-white tracking-tighter">Your <br /> Plan.</h1>
                     </motion.div>
 
                     <motion.div variants={fadeUp} className="grid md:grid-cols-3 gap-12 pt-12 border-t border-white/5">
                       <div className="space-y-2">
-                        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30">Target Goal</span>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30">Goal</span>
                         <div className="text-2xl font-serif italic text-white tracking-tight">{plan?.planTitle || "Performance Tier"}</div>
                       </div>
                       <div className="space-y-2">
-                        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30">Timeline Horizon</span>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30">Timeline</span>
                         <div className="text-2xl font-serif italic text-white tracking-tight">{plan?.biometricProjections?.timeline || "Standard Horizon"}</div>
                       </div>
                       <div className="space-y-2">
-                        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30">Morphotype</span>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30">Body Type</span>
                         <div className="text-2xl font-serif italic text-white tracking-tight">{plan?.detectedBodyType || "Mesomorph"}</div>
                       </div>
                     </motion.div>
@@ -433,8 +433,8 @@ export default function ProtocolPage() {
                   <div className="space-y-12">
                     <div className="flex items-end justify-between border-b border-white/5 pb-8">
                       <div className="space-y-2">
-                         <span className="text-[10px] font-mono text-gold-leaf uppercase tracking-[0.5em]">The Cycle</span>
-                         <h2 className="text-4xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">Weekly Protocol.</h2>
+                         <span className="text-[10px] font-mono text-gold-leaf uppercase tracking-[0.5em]">Your Week</span>
+                         <h2 className="text-4xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">Weekly Schedule.</h2>
                       </div>
                     </div>
 
@@ -443,7 +443,7 @@ export default function ProtocolPage() {
                         <motion.div key={idx} className={`border rounded-[3rem] overflow-hidden transition-all duration-700 ${expandedDay === idx ? "border-gold-leaf/40 bg-white/[0.03]" : "border-white/5 bg-transparent"}`}>
                           <button onClick={() => setExpandedDay(expandedDay === idx ? null : idx)} className="w-full flex items-center justify-between p-10 md:p-14 text-left group">
                             <div className="space-y-3">
-                              <span className="text-[10px] font-mono uppercase tracking-[0.5em] text-gold-leaf">Sequence 0{idx + 1}</span>
+                              <span className="text-[10px] font-mono uppercase tracking-[0.5em] text-gold-leaf">Day 0{idx + 1}</span>
                               <h3 className="text-4xl md:text-5xl font-serif italic text-white group-hover:text-gold-leaf transition-colors duration-500">{day.day}</h3>
                             </div>
                             <div className="flex items-center gap-12">
@@ -477,7 +477,7 @@ export default function ProtocolPage() {
                                         </div>
                                         <div className="flex gap-4 opacity-0 group-hover/ex:opacity-100 transition-all">
                                           <button onClick={() => setAiCoachTarget({ ex, id })} className="px-6 py-3 rounded-full bg-gold-leaf/5 hover:bg-gold-leaf text-gold-leaf hover:text-black transition-all flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest border border-gold-leaf/20">
-                                            <Camera size={16} /> Neural Scan
+                                            <Camera size={16} /> Live Coach
                                           </button>
                                           <button onClick={() => setSelectedExercise(ex)} className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
                                             <Play size={18} fill="currentColor" className="ml-1" />
@@ -497,9 +497,9 @@ export default function ProtocolPage() {
                 </>
               ) : (
                 <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-8 text-center">
-                   <h2 className="text-5xl font-serif italic text-white/20">Protocol Undefined.</h2>
+                   <h2 className="text-5xl font-serif italic text-white/20">No Plan Yet.</h2>
                    <Link href="/uplink" className="btn-kinetic bg-white text-void hover:text-gold-leaf px-16 py-6">
-                      Generate Blueprint
+                      Build Your Plan
                    </Link>
                 </div>
               )}

@@ -48,7 +48,7 @@ export default function RegisterPage() {
             <span className="font-display text-4xl italic tracking-tighter text-white">SVORA</span>
 
           </Link>
-          <h2 className="text-[10px] font-mono uppercase tracking-[0.5em] text-gold-leaf">Create Neural Account</h2>
+          <h2 className="text-[10px] font-mono uppercase tracking-[0.5em] text-gold-leaf">Create Your Account</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -85,12 +85,12 @@ export default function RegisterPage() {
             type="submit" disabled={loading}
             className="w-full py-5 rounded-full bg-white text-void font-bold uppercase tracking-[0.4em] text-[10px] hover:bg-gold-leaf transition-all duration-700 shadow-2xl flex items-center justify-center gap-4 group"
           >
-            {loading ? <Activity size={14} className="animate-spin" /> : <>Register Protocol <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" /></>}
+            {loading ? <Activity size={14} className="animate-spin" /> : <>Create Account <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" /></>}
           </button>
         </form>
 
         <p className="text-center text-[10px] font-mono text-white/20 uppercase tracking-widest">
-          Already verified? <Link href="/login" className="text-gold-leaf/60 hover:text-gold-leaf transition-colors ml-2 underline underline-offset-4">Sign In</Link>
+          Already have an account? <Link href="/login" className="text-gold-leaf/60 hover:text-gold-leaf transition-colors ml-2 underline underline-offset-4">Sign In</Link>
         </p>
       </motion.div>
     </div>

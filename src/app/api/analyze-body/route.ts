@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { OpenRouter } from '@openrouter/sdk';
 import clientPromise from '@/lib/mongodb';
+import { getSession } from '@/lib/auth';
 
 const openrouter = new OpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY || ""
@@ -8,6 +9,9 @@ const openrouter = new OpenRouter({
 
 export async function POST(request: Request) {
   try {
+    const session = await getSession() as any;
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { beforeImage, currentImage } = await request.json();
     
     if (!beforeImage || !currentImage) {

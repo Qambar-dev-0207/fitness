@@ -2,7 +2,8 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const secretKey = "svora_secret_key_bespoke_100k"; // In production, use process.env.JWT_SECRET
+const secretKey = process.env.JWT_SECRET;
+if (!secretKey) throw new Error("JWT_SECRET environment variable is not set");
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: Record<string, unknown>) {
@@ -43,7 +44,11 @@ export async function getSession() {
   const cookieStore = await cookies();
   const session = cookieStore.get("session")?.value;
   if (!session) return null;
-  return await decrypt(session);
+  try {
+    return await decrypt(session);
+  } catch {
+    return null;
+  }
 }
 
 export async function updateSession(request: NextRequest) {

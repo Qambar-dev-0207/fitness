@@ -7,7 +7,10 @@
   --color-gold-leaf: #D4AF37;
   --color-mercury: #E5E5E5;
   --color-emerald-glow: #10B981;
-  
+  --color-soft-peach: #F5E6DA;
+  --color-jet-black: #0A0A0A;
+  --color-deep-red: #C0392B;
+
   --font-display: "Playfair Display", serif;
   --font-body: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -92,4 +95,40 @@ body {
 
 @keyframes reveal {
   to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* --- GLASS CARD --- */
+.glass-card {
+  @apply relative overflow-hidden bg-white/[0.03] border border-white/10 rounded-[2rem] transition-all duration-500;
+  backdrop-filter: blur(20px);
+}
+
+.glass-card:hover {
+  @apply border-white/20 bg-white/[0.05];
+}
+
+/* --- MAGNETIC BUTTON --- */
+.btn-magnetic {
+  @apply relative overflow-hidden transition-all duration-500;
+}
+
+/* --- ORGANIC NOISE OVERLAY --- */
+.organic-noise {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* --- LIQUID BG --- */
+.liquid-bg {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }

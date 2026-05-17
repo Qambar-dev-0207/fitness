@@ -36,6 +36,7 @@ export default function JournalPage() {
     try {
       const res = await fetch("/api/analyze-body", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ beforeImage: beforeImg, currentImage: currentImg })
       });
       const data = await res.json();
@@ -60,7 +61,7 @@ export default function JournalPage() {
         <Link href="/protocol" className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/60 hover:text-gold-leaf transition-colors flex items-center gap-2">
           <ArrowLeft size={14} /> Protocol
         </Link>
-        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500">Somatic Journal</span>
+        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500">My Journal</span>
       </nav>
 
       <div className="pt-32 px-6 md:px-12 max-w-4xl mx-auto">
@@ -69,13 +70,13 @@ export default function JournalPage() {
             onClick={() => setActiveTab("calories")}
             className={`text-2xl font-serif italic transition-colors ${activeTab === "calories" ? "text-gold-leaf" : "text-white/40 hover:text-white"}`}
           >
-            Metabolic Log
+            Calorie Tracker
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab("scan")}
             className={`text-2xl font-serif italic transition-colors ${activeTab === "scan" ? "text-gold-leaf" : "text-white/40 hover:text-white"}`}
           >
-            Body Scan
+            Progress Photos
           </button>
         </div>
 
@@ -117,7 +118,7 @@ export default function JournalPage() {
                 </div>
 
                 <div className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 h-[400px] overflow-y-auto">
-                  <h3 className="text-xl font-serif italic text-white mb-6">Daily Intake</h3>
+                  <h3 className="text-xl font-serif italic text-white mb-6">Today's Log</h3>
                   <div className="space-y-4">
                     {logs.length === 0 && <p className="text-white/20 text-sm">No entries today.</p>}
                     {logs.map((log, i) => (
@@ -142,7 +143,7 @@ export default function JournalPage() {
               <div className="grid md:grid-cols-2 gap-8">
                 {/* Before Image */}
                 <div className="space-y-4">
-                  <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Baseline Scan</div>
+                  <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Before Photo</div>
                   <label className="block w-full aspect-[3/4] bg-white/[0.02] border border-white/10 rounded-[2rem] overflow-hidden relative cursor-pointer group hover:border-white/30 transition-colors">
                     {beforeImg ? (
                       <img src={beforeImg} className="w-full h-full object-cover opacity-60" />
@@ -158,7 +159,7 @@ export default function JournalPage() {
 
                 {/* Current Image */}
                 <div className="space-y-4">
-                  <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Current Scan</div>
+                  <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Current Photo</div>
                   <label className="block w-full aspect-[3/4] bg-white/[0.02] border border-white/10 rounded-[2rem] overflow-hidden relative cursor-pointer group hover:border-white/30 transition-colors">
                     {currentImg ? (
                       <img src={currentImg} className="w-full h-full object-cover opacity-60" />
@@ -179,7 +180,7 @@ export default function JournalPage() {
                   disabled={!beforeImg || !currentImg || analyzing}
                   className="px-12 py-5 rounded-full bg-gold-leaf text-black font-bold uppercase tracking-[0.3em] text-[10px] hover:bg-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed flex items-center gap-4"
                 >
-                  {analyzing ? "Synthesizing..." : "Initiate Biometric Comparison"}
+                  {analyzing ? "Analyzing..." : "Compare My Progress"}
                   {analyzing && <Activity size={14} className="animate-spin" />}
                 </button>
               </div>
@@ -190,28 +191,28 @@ export default function JournalPage() {
                   className="p-12 border border-gold-leaf/20 bg-gold-leaf/5 rounded-[3rem] space-y-8"
                 >
                   <div className="flex justify-between items-center border-b border-white/10 pb-6">
-                    <h3 className="text-3xl font-serif italic text-white">Analysis Complete.</h3>
+                    <h3 className="text-3xl font-serif italic text-white">Your Results.</h3>
                     <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf">Verified</span>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-12">
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Muscle Delta</div>
+                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Muscle Change</div>
                         <div className="text-4xl font-serif italic text-white">{analysis.muscleMassChange}</div>
                       </div>
                       <div className="space-y-2">
-                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Adipose Shift</div>
+                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Fat Change</div>
                         <div className="text-4xl font-serif italic text-white">{analysis.bodyFatChange}</div>
                       </div>
                     </div>
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Structural Note</div>
+                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40">Posture Notes</div>
                         <p className="text-white/80 leading-relaxed text-sm">{analysis.postureAnalysis}</p>
                       </div>
                       <div className="space-y-2">
-                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf/80">Protocol Adjustment</div>
+                        <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf/80">Training Tip</div>
                         <p className="text-white/80 leading-relaxed text-sm">{analysis.routineAdjustments}</p>
                       </div>
                     </div>

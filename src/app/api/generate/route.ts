@@ -10,12 +10,15 @@ const openrouter = new OpenRouter({
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
-  console.log("GENERATION_DEBUG: Request received");
   if (!process.env.OPENROUTER_API_KEY) {
-    console.error("FATAL: OPENROUTER_API_KEY is missing.");
     return NextResponse.json({ error: "API Key Configuration Error" }, { status: 500 });
   }
   try {
+    const session = await getSession() as any;
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized access detected." }, { status: 401 });
+    }
+
     const { age, height, weight, bodyType, goal, trainingLocation, fasting, image } = await req.json();
 
     const isAIGeneratedBodyType = bodyType === "AI_ANALYSIS_REQUESTED";
@@ -85,14 +88,12 @@ export async function POST(req: Request) {
       }
     ];
 
-    console.log("GENERATION_DEBUG: Calling OpenRouter with model:", modelId);
     const response = await openrouter.chat.send({
       chatGenerationParams: {
         model: modelId,
         messages: messages,
       }
     });
-    console.log("GENERATION_DEBUG: OpenRouter responded successfully");
 
     const content = response.choices[0]?.message?.content;
     const fullResponse = typeof content === "string" ? content : "";
@@ -109,11 +110,6 @@ export async function POST(req: Request) {
     }
 
     // Persist to database
-    const session = await getSession() as any;
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized access detected." }, { status: 401 });
-    }
-    
     const client = await clientPromise;
     const db = client.db("svora_db");
     

@@ -40,6 +40,7 @@ export const JournalSection = () => {
     if (!calories) return;
     const res = await fetch("/api/journal/log", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "calorie", cal: calories, pro: protein }),
     });
     if (res.ok) {
@@ -54,6 +55,7 @@ export const JournalSection = () => {
     try {
       const res = await fetch("/api/analyze-body", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ beforeImage: beforeImg, currentImage: currentImg })
       });
       const data = await res.json();
@@ -72,13 +74,13 @@ export const JournalSection = () => {
           onClick={() => setActiveTab("calories")}
           className={`text-xl font-serif italic transition-colors ${activeTab === "calories" ? "text-gold-leaf" : "text-white/40 hover:text-white"}`}
         >
-          Metabolic Log
+          Calorie Tracker
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab("scan")}
           className={`text-xl font-serif italic transition-colors ${activeTab === "scan" ? "text-gold-leaf" : "text-white/40 hover:text-white"}`}
         >
-          Somatic Scan
+          Progress Photos
         </button>
       </div>
 
@@ -91,7 +93,7 @@ export const JournalSection = () => {
             <div className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Intake Calories</label>
+                  <label className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Calories</label>
                   <input 
                     type="number" value={calories} onChange={(e) => setCalories(e.target.value)}
                     className="w-full bg-white/[0.02] border border-white/5 rounded-2xl p-4 text-white text-2xl font-mono outline-none focus:border-gold-leaf/30"
@@ -113,9 +115,9 @@ export const JournalSection = () => {
             </div>
 
             <div className="glass-card p-8 h-[350px] overflow-y-auto">
-              <h4 className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/30 mb-6 border-b border-white/5 pb-4">Activity Stream</h4>
+              <h4 className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/30 mb-6 border-b border-white/5 pb-4">Today's Log</h4>
               <div className="space-y-4">
-                {logs.length === 0 && <p className="text-[10px] font-mono uppercase text-white/10 text-center py-12">No data captured today</p>}
+                {logs.length === 0 && <p className="text-[10px] font-mono uppercase text-white/10 text-center py-12">Nothing logged yet</p>}
                 {logs.filter(l => l.type === "calorie").map((log, i) => (
                   <div key={i} className="flex justify-between items-center py-4 border-b border-white/5">
                     <span className="text-[9px] font-mono text-white/20">{new Date(log.createdAt).toLocaleTimeString()}</span>
@@ -135,24 +137,24 @@ export const JournalSection = () => {
           >
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-4">
-                <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Baseline Archive</span>
+                <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Before Photo</span>
                 <label className="block w-full aspect-[3/4] glass-card relative cursor-pointer group">
                   {beforeImg ? <img src={beforeImg} className="w-full h-full object-cover opacity-40 grayscale" /> : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                       <Upload size={24} className="text-white/10 group-hover:text-gold-leaf transition-colors" />
-                      <span className="text-[9px] font-mono uppercase tracking-widest text-white/20">Upload Asset</span>
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-white/20">Upload Photo</span>
                     </div>
                   )}
                   <input type="file" onChange={(e) => handleImage(e, "before")} className="hidden" accept="image/*" />
                 </label>
               </div>
               <div className="space-y-4">
-                <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Current Evaluation</span>
+                <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Current Photo</span>
                 <label className="block w-full aspect-[3/4] glass-card relative cursor-pointer group">
                   {currentImg ? <img src={currentImg} className="w-full h-full object-cover opacity-40 grayscale" /> : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                       <Upload size={24} className="text-white/10 group-hover:text-gold-leaf transition-colors" />
-                      <span className="text-[9px] font-mono uppercase tracking-widest text-white/20">Upload Asset</span>
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-white/20">Upload Photo</span>
                     </div>
                   )}
                   <input type="file" onChange={(e) => handleImage(e, "current")} className="hidden" accept="image/*" />
@@ -165,7 +167,7 @@ export const JournalSection = () => {
                 onClick={runAnalysis} disabled={!beforeImg || !currentImg || analyzing}
                 className="px-16 py-6 rounded-full bg-gold-leaf text-void font-bold uppercase tracking-[0.4em] text-[10px] hover:bg-white transition-all disabled:opacity-20 flex items-center gap-4"
               >
-                {analyzing ? "Analyzing Fiber Density..." : "Initiate Biometric Audit"}
+                {analyzing ? "Analyzing..." : "Compare My Progress"}
                 {analyzing && <Activity size={14} className="animate-spin" />}
               </button>
             </div>
@@ -173,27 +175,27 @@ export const JournalSection = () => {
             {analysis && (
               <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="p-12 glass-card border-gold-leaf/20 bg-gold-leaf/5 space-y-10">
                 <div className="flex justify-between items-center border-b border-white/5 pb-6">
-                  <h3 className="text-3xl font-serif italic text-white tracking-tighter">Somatic Report // Verified</h3>
+                  <h3 className="text-3xl font-serif italic text-white tracking-tighter">Your Progress Report</h3>
                   <Award size={20} className="text-gold-leaf" />
                 </div>
                 <div className="grid md:grid-cols-2 gap-12">
                   <div className="space-y-8">
                     <div className="space-y-2">
-                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Muscle Delta</span>
+                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Muscle Change</span>
                       <div className="text-5xl font-serif italic text-white">{analysis.muscleMassChange}</div>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Adipose Shift</span>
+                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Fat Change</span>
                       <div className="text-5xl font-serif italic text-white">{analysis.bodyFatChange}</div>
                     </div>
                   </div>
                   <div className="space-y-8">
                     <div className="space-y-2">
-                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Alignment Audit</span>
+                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">Posture Check</span>
                       <p className="text-sm font-light text-white/60 leading-relaxed italic font-serif">&quot;{analysis.postureAnalysis}&quot;</p>
                     </div>
                     <div className="space-y-2 p-6 rounded-3xl bg-gold-leaf/5 border border-gold-leaf/10">
-                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-gold-leaf">Protocol Adjustment</span>
+                      <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-gold-leaf">Training Tip</span>
                       <p className="text-sm font-light text-white/80 leading-relaxed mt-2 italic font-serif">&quot;{analysis.routineAdjustments}&quot;</p>
                     </div>
                   </div>

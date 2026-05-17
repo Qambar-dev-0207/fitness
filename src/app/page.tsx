@@ -85,8 +85,8 @@ export default function EnhancedLanding() {
             <motion.div variants={fadeUp} className="flex items-center gap-6 mb-8 border-l-2 border-gold-leaf pl-6 py-2">
                <Zap size={16} className="text-gold-leaf animate-pulse" />
                <div className="flex flex-col">
-                 <span className="text-[10px] font-mono uppercase tracking-[0.6em] text-white/80">Somatic Calibration Unit</span>
-                 <span className="text-[9px] font-mono uppercase tracking-widest text-gold-leaf/60">System Ready // v.2.6</span>
+                 <span className="text-[10px] font-mono uppercase tracking-[0.6em] text-white/80">AI Personal Training</span>
+                 <span className="text-[9px] font-mono uppercase tracking-widest text-gold-leaf/60">Powered by AI // v.2.6</span>
                </div>
             </motion.div>
 
@@ -100,19 +100,19 @@ export default function EnhancedLanding() {
             <div className="grid lg:grid-cols-12 gap-24 items-end mt-12">
               <motion.div variants={fadeUp} className="lg:col-span-5 space-y-12">
                 <p className="text-xl md:text-2xl font-light leading-relaxed text-white/70 font-serif italic border-l border-white/10 pl-6">
-                  &quot;Architecture is frozen music. <br />
-                  <span className="text-white">Your body is kinetic art.</span>&quot;
+                  A plan built for you — <br />
+                  <span className="text-white">not everyone else.</span>
                 </p>
                 <div className="flex gap-8 items-center">
                    <Link href="/uplink" className="btn-kinetic px-12 py-6 bg-white text-black font-bold uppercase tracking-[0.4em] text-[10px] hover:bg-void hover:text-white hover:border-white transition-all duration-700 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-                     Get Your Blueprint
+                     Build My Plan
                    </Link>
                    <button className="flex items-center gap-4 group px-6 py-3 rounded-full hover:bg-white/5 transition-colors">
                       <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-gold-leaf transition-colors duration-500 relative overflow-hidden">
                          <div className="absolute inset-0 bg-gold-leaf opacity-0 group-hover:opacity-10 transition-opacity" />
                          <Play size={12} fill="white" className="ml-0.5" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">The Theory</span>
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">How It Works</span>
                    </button>
                 </div>
               </motion.div>
@@ -125,7 +125,7 @@ export default function EnhancedLanding() {
            {/* Top Metric */}
            <div className="space-y-6">
               <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                <span className="text-[9px] font-mono text-gold-leaf uppercase tracking-[0.4em]">System Pulse</span>
+                <span className="text-[9px] font-mono text-gold-leaf uppercase tracking-[0.4em]">Live Stats</span>
                 <div className="w-2 h-2 bg-emerald-glow rounded-full animate-ping" />
               </div>
               
@@ -145,13 +145,13 @@ export default function EnhancedLanding() {
            <div className="relative aspect-square border border-white/5 rounded-full flex items-center justify-center">
               <div className="absolute inset-0 border border-dashed border-white/10 rounded-full animate-[spin_20s_linear_infinite]" />
               <div className="absolute inset-4 border border-white/5 rounded-full" />
-              <div className="text-[9px] font-mono uppercase tracking-widest text-white/30 animate-pulse">Scanning</div>
+              <div className="text-[9px] font-mono uppercase tracking-widest text-white/30 animate-pulse">Analyzing</div>
            </div>
 
            {/* Bottom Data */}
            <div className="space-y-2">
-              <span className="text-[9px] font-mono text-gold-leaf uppercase tracking-[0.4em]">Morphology</span>
-              <div className="text-5xl font-serif italic text-white/90 uppercase tracking-tighter mix-blend-overlay">Mesomorph</div>
+              <span className="text-[9px] font-mono text-gold-leaf uppercase tracking-[0.4em]">Body Type</span>
+              <div className="text-5xl font-serif italic text-white/90 uppercase tracking-tighter mix-blend-overlay">Athletic</div>
               <div className="h-[1px] w-full bg-white/10 mt-4 relative overflow-hidden">
                 <motion.div 
                   animate={{ x: ["-100%", "100%"] }}
@@ -165,7 +165,7 @@ export default function EnhancedLanding() {
 
       {/* --- FEATURES: THE BENTO GRID --- */}
       <section id="method" className="py-48 px-8 md:px-20 relative z-20 bg-void border-t border-white/5">
-        <SectionTitle title="The Methodology." sub="How it works" />
+        <SectionTitle title="How It Works." sub="The process" />
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {/* Card 1: AI Engine */}
@@ -177,12 +177,12 @@ export default function EnhancedLanding() {
                  <Activity className="text-gold-leaf" size={40} strokeWidth={1} />
               </div>
               <div className="space-y-8 max-w-xl relative z-10">
-                 <h3 className="text-4xl font-serif italic text-white">Generative Intelligence.</h3>
+                 <h3 className="text-4xl font-serif italic text-white">AI-Powered Plans.</h3>
                  <p className="text-white/60 leading-relaxed font-light text-lg">
-                    Our proprietary AI analyzes your unique somatic markers, lifestyle constraints, and nutritional thresholds to synthesize a periodized protocol that adapts in real-time.
+                    Our AI studies your body type, lifestyle, and goals to build a workout plan that actually fits your life — and updates as you improve.
                  </p>
                  <div className="pt-4 flex gap-4">
-                    {["Biometrics", "Neural Nets", "Adaptive"].map(tag => (
+                    {["Personal", "Smart", "Adaptive"].map(tag => (
                       <span key={tag} className="text-[9px] font-mono uppercase tracking-widest px-4 py-2 border border-white/10 rounded-full text-white/40 bg-white/5">{tag}</span>
                     ))}
                  </div>
@@ -198,9 +198,9 @@ export default function EnhancedLanding() {
            >
               <Shield className="text-white/20 group-hover:text-gold-leaf transition-colors duration-500" size={32} strokeWidth={1} />
               <div className="space-y-4">
-                 <h3 className="text-3xl font-serif italic text-white">Visual Link.</h3>
+                 <h3 className="text-3xl font-serif italic text-white">Form Guide.</h3>
                  <p className="text-sm text-white/50 leading-relaxed">
-                    Access our visual library with high-fidelity exercise demonstrations and form verification.
+                    Watch exercise videos and see exactly how to perform each movement with proper form.
                  </p>
               </div>
            </motion.div>
@@ -212,9 +212,9 @@ export default function EnhancedLanding() {
            >
               <Heart className="text-white/20 group-hover:text-gold-leaf transition-colors duration-500" size={32} strokeWidth={1} />
               <div className="space-y-4">
-                 <h3 className="text-3xl font-serif italic text-white">Metabolic.</h3>
+                 <h3 className="text-3xl font-serif italic text-white">Nutrition.</h3>
                  <p className="text-sm text-white/50 leading-relaxed">
-                    Nutritional guides that balance energy output with restorative recovery cycles.
+                    Simple nutrition guides to fuel your workouts and speed up your recovery.
                  </p>
               </div>
            </motion.div>
@@ -225,12 +225,12 @@ export default function EnhancedLanding() {
              className="bento-luxe md:col-span-2 group flex flex-col md:flex-row gap-12 items-center border border-white/10 hover:border-gold-leaf/30"
            >
               <div className="md:w-1/2 space-y-6">
-                 <h3 className="text-4xl font-serif italic text-white">Progressive Overload.</h3>
+                 <h3 className="text-4xl font-serif italic text-white">Track Your Progress.</h3>
                  <p className="text-white/50 leading-relaxed font-light">
-                    Every session is tracked. Every rep counts. The system monitors your volume and resistance to ensure consistent growth.
+                    Every session matters. We track your workouts so you always know you're moving forward — not spinning your wheels.
                  </p>
                  <Link href="/uplink" className="inline-flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.4em] text-gold-leaf hover:gap-6 transition-all">
-                    Start Tracking <ArrowUpRight size={14} />
+                    Start Now <ArrowUpRight size={14} />
                  </Link>
               </div>
               <div className="md:w-1/2 w-full h-48 border-t border-b border-white/5 bg-black/40 relative overflow-hidden backdrop-blur-md">
@@ -317,25 +317,25 @@ export default function EnhancedLanding() {
           >
             <div className="flex items-center gap-4">
                <span className="w-12 h-[1px] bg-gold-leaf/40" />
-               <span className="text-[10px] font-mono uppercase tracking-[0.6em] text-gold-leaf/80">Somatic Profile // ARCH-01</span>
+               <span className="text-[10px] font-mono uppercase tracking-[0.6em] text-gold-leaf/80">Training Profile // 01</span>
             </div>
             <h2 className="text-7xl font-serif italic text-white leading-[0.9] tracking-tighter">
                <DecryptedText text="Kinetic" /> <br /> 
-               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-leaf to-white/40">Architecture.</span>
+               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-leaf to-white/40">In Motion.</span>
             </h2>
             <p className="text-lg text-white/50 leading-relaxed font-light max-w-md border-l border-white/10 pl-8 italic">
-               &quot;Flow state is not achieved; it is engineered.&quot; <br />
+               &quot;Your best body starts with a plan built around you.&quot; <br />
                <span className="text-white/30 not-italic text-sm mt-4 block">
-                  Optimizing female biomechanical efficiency through neural-integrated resistance protocols.
+                  Personalized workouts designed around how you naturally move and what your body responds to.
                </span>
             </p>
             <div className="pt-10 flex gap-12">
                <div className="space-y-1">
-                  <div className="text-[8px] font-mono text-gold-leaf uppercase tracking-widest">Efficiency</div>
+                  <div className="text-[8px] font-mono text-gold-leaf uppercase tracking-widest">Accuracy</div>
                   <div className="text-2xl font-serif text-white italic">99.2%</div>
                </div>
                <div className="space-y-1">
-                  <div className="text-[8px] font-mono text-gold-leaf uppercase tracking-widest">Restoration</div>
+                  <div className="text-[8px] font-mono text-gold-leaf uppercase tracking-widest">Recovery</div>
                   <div className="text-2xl font-serif text-white italic">Adaptive</div>
                </div>
             </div>
@@ -371,9 +371,9 @@ export default function EnhancedLanding() {
                <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-gold-leaf">Profile // Beta</span>
                <span className="w-12 h-[1px] bg-gold-leaf" />
             </div>
-            <h2 className="text-6xl font-serif italic text-white leading-tight">Engineering <br /> Power.</h2>
+            <h2 className="text-6xl font-serif italic text-white leading-tight">Built for <br /> Strength.</h2>
             <p className="text-white/50 leading-relaxed font-light text-lg max-w-md">
-              Absolute structural integrity. Advanced hypertrophic strategies engineered for male somatic archetypes, prioritizing progressive overload and recovery.
+              Science-backed muscle-building strategies for men — focused on getting stronger, building size, and recovering properly.
             </p>
             <div className="pt-8 grid grid-cols-2 gap-8 border-t border-white/10 w-full">
               <div>
@@ -395,8 +395,8 @@ export default function EnhancedLanding() {
           <div className="space-y-6">
              <span className="font-serif text-4xl italic tracking-tighter text-white">SVORA</span>
              <p className="text-[9px] font-mono text-white/30 uppercase tracking-[0.4em] leading-loose">
-                Somatic Excellence. <br />
-                Established 2026.
+                Personalized Fitness. <br />
+                Est. 2026.
              </p>
           </div>
           
@@ -414,7 +414,7 @@ export default function EnhancedLanding() {
           </div>
 
           <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/10 italic">
-             Form is the architecture of thought.
+             Your journey starts today.
           </div>
         </div>
       </footer>
