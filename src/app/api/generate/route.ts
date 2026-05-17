@@ -103,10 +103,12 @@ export async function POST(req: Request) {
       callAI: async (correctionHint) => {
         const collectStream = async (): Promise<string> => {
           const stream = await openrouter.chat.send({
-            model: modelId,
-            messages: messages(correctionHint),
-            max_tokens: 2500,
-            stream: true,
+            chatGenerationParams: {
+              model: modelId,
+              messages: messages(correctionHint),
+              maxTokens: 2500,
+              stream: true,
+            },
           }) as AsyncIterable<{ choices: Array<{ delta: { content?: string } }> }>;
 
           let text = "";
