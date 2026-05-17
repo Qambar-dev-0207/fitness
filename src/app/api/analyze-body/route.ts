@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       callAI: async (correctionHint) => {
         const stream = await openrouter.chat.send({
           chatGenerationParams: {
-            model: "google/gemini-2.0-flash-exp:free",
+            model: "google/gemini-2.5-flash-lite",
             messages: [
               {
                 role: "user",

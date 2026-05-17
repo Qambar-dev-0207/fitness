@@ -86,8 +86,7 @@ export async function POST(req: Request) {
       Generate 4 distinct training days. sets must be an integer 1-20. rpe must be 1-10.
     `;
 
-    // Gemini 2.0 Flash is fast, reliable, and handles both text and vision
-    const modelId = "google/gemini-2.0-flash-exp:free";
+    const modelId = "google/gemini-2.5-flash-lite";
 
     const messages = (correctionHint: string) => [
       {
