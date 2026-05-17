@@ -86,7 +86,7 @@ export async function POST(req: Request) {
       Generate 4 distinct training days. sets must be an integer 1-20. rpe must be 1-10.
     `;
 
-    const modelId = "google/gemini-2.5-flash-lite:free";
+    const modelId = "google/gemma-4-27b-it:free";
 
     const messages = (correctionHint: string) => [
       {
