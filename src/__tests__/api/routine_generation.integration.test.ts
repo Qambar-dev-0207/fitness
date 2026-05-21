@@ -75,28 +75,44 @@ describe('Routine Generation Integration (Groq)', () => {
           day: "Monday",
           focus: "Full Body HIIT",
           exercises: [
-            { name: "Burpees", sets: 4, reps: "15", rpe: 9, notes: "Explosive movement", videoQuery: "burpee form" }
+            { name: "Burpees", sets: 4, reps: "15", rpe: 9, notes: "Explosive movement", videoQuery: "burpee form" },
+            { name: "Pushups", sets: 3, reps: "20", rpe: 7, notes: "Chest focus", videoQuery: "pushup form" },
+            { name: "Mountain Climbers", sets: 3, reps: "45s", rpe: 8, notes: "Core and cardio", videoQuery: "mountain climber form" },
+            { name: "Lunges", sets: 3, reps: "12 per leg", rpe: 7, notes: "Leg focus", videoQuery: "lunge form" },
+            { name: "Plank Jacks", sets: 3, reps: "30s", rpe: 8, notes: "Core stability", videoQuery: "plank jack form" }
           ]
         },
         {
           day: "Wednesday",
           focus: "Core & Stability",
           exercises: [
-            { name: "Plank", sets: 3, reps: "60s", rpe: 7, notes: "Keep back flat", videoQuery: "plank form" }
+            { name: "Plank", sets: 3, reps: "60s", rpe: 7, notes: "Keep back flat", videoQuery: "plank form" },
+            { name: "Leg Raises", sets: 3, reps: "15", rpe: 8, notes: "Lower abs", videoQuery: "leg raise form" },
+            { name: "Russian Twists", sets: 3, reps: "20 per side", rpe: 7, notes: "Obliques", videoQuery: "russian twist form" },
+            { name: "Bicycle Crunches", sets: 3, reps: "20", rpe: 8, notes: "Full core", videoQuery: "bicycle crunch form" },
+            { name: "Deadbugs", sets: 3, reps: "10 per side", rpe: 6, notes: "Stability", videoQuery: "deadbug form" }
           ]
         },
         {
           day: "Friday",
           focus: "Lower Body Burn",
           exercises: [
-            { name: "Bodyweight Squats", sets: 4, reps: "20", rpe: 8, notes: "Focus on depth", videoQuery: "squat form" }
+            { name: "Bodyweight Squats", sets: 4, reps: "20", rpe: 8, notes: "Focus on depth", videoQuery: "squat form" },
+            { name: "Glute Bridges", sets: 3, reps: "15", rpe: 7, notes: "Squeeze glutes", videoQuery: "glute bridge form" },
+            { name: "Walking Lunges", sets: 3, reps: "20 steps", rpe: 8, notes: "Quads and glutes", videoQuery: "walking lunge form" },
+            { name: "Calf Raises", sets: 3, reps: "20", rpe: 6, notes: "Slow and controlled", videoQuery: "calf raise form" },
+            { name: "Wall Sit", sets: 3, reps: "45s", rpe: 9, notes: "Hold steady", videoQuery: "wall sit form" }
           ]
         },
         {
           day: "Saturday",
           focus: "Active Recovery",
           exercises: [
-            { name: "Long Walk", sets: 1, reps: "45 min", rpe: 4, notes: "Steady pace", videoQuery: "walking benefits" }
+            { name: "Long Walk", sets: 1, reps: "45 min", rpe: 4, notes: "Steady pace", videoQuery: "walking benefits" },
+            { name: "Yoga Flow", sets: 1, reps: "20 min", rpe: 3, notes: "Gentle stretching", videoQuery: "yoga for recovery" },
+            { name: "Foam Rolling", sets: 1, reps: "10 min", rpe: 5, notes: "Muscle release", videoQuery: "foam rolling basics" },
+            { name: "Static Stretching", sets: 1, reps: "10 min", rpe: 2, notes: "Hold 30s each", videoQuery: "static stretching routine" },
+            { name: "Deep Breathing", sets: 1, reps: "5 min", rpe: 1, notes: "Relaxation", videoQuery: "diaphragmatic breathing" }
           ]
         }
       ],

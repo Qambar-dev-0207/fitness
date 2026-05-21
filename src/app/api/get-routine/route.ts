@@ -18,10 +18,10 @@ export async function GET() {
       .next();
 
     if (!routine) {
-      return NextResponse.json({ error: 'No routine found' }, { status: 404 });
+      return NextResponse.json({ routine: null });
     }
 
-    return NextResponse.json(routine);
+    return NextResponse.json({ routine });
   } catch (e: any) {
     console.error(e);
     return NextResponse.json({ error: 'Failed to fetch routine' }, { status: 500 });

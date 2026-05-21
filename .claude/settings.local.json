@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npm install *)",
+      "Bash(npx jest *)",
+      "Bash(del jest.config.ts)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in d.get\\('devDependencies',{}\\).items\\(\\)}, indent=2\\)\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git commit -m 'fix: remove read-only NODE_ENV assignment from jest.setup.ts *)",
+      "Bash(git commit -m 'fix: cast extractJson result to Record<string,unknown> to allow spread *)",
+      "Bash(npm test *')",
+      "Bash(npm test *)",
+      "Bash(npm run *)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

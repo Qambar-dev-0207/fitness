@@ -9,6 +9,7 @@ const groq = new Groq({
 });
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // Increase timeout to 60s for high-reasoning models
 
 // Hard timeout per AI call so a hanging model never causes a 502
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
@@ -83,11 +84,11 @@ export async function POST(req: Request) {
         }
       }
 
-      Generate 4 distinct training days. sets must be an integer 1-20. rpe must be 1-10.
+      Generate 4 distinct training days. Each day MUST include a minimum of 5-6 exercises. sets must be an integer 1-20. rpe must be 1-10.
     `;
 
-    // Using llama-3.3-70b-versatile for high reasoning and efficiency.
-    const modelId = "llama-3.3-70b-versatile";
+    // Use Llama 4 Scout for vision tasks, Llama 3.3 70B for text-only reasoning
+    const modelId = image ? "meta-llama/llama-4-scout-17b-16e-instruct" : "llama-3.3-70b-versatile";
 
     const messages = (correctionHint: string) => [
       {
@@ -105,7 +106,7 @@ export async function POST(req: Request) {
           const stream = await groq.chat.completions.create({
             model: modelId,
             messages: messages(correctionHint),
-            max_tokens: 2500,
+            max_tokens: 4000,
             stream: true,
             response_format: { type: "json_object" }
           });
@@ -117,7 +118,8 @@ export async function POST(req: Request) {
           }
           return text;
         };
-        return withTimeout(collectStream(), 22000);
+        // Use a generous timeout for the AI call itself
+        return withTimeout(collectStream(), 50000);
       },
       parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateWorkoutPlan,

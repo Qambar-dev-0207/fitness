@@ -8,6 +8,18 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY || ""
 });
 
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`AI request timed out after ${ms / 1000}s`)), ms)
+    ),
+  ]);
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getSession() as any;
@@ -36,29 +48,32 @@ export async function POST(request: Request) {
 
     const { data: analysis, validated, attempts, validationErrors } = await withAIRetry({
       callAI: async (correctionHint) => {
-        const stream = await groq.chat.completions.create({
-          // Using llama-4-scout for multimodal analysis.
-          model: "meta-llama/llama-4-scout-17b-16e-instruct",
-          messages: [
-            {
-              role: "user",
-              content: [
-                { type: "text", text: basePrompt + correctionHint },
-                { type: "image_url", image_url: { url: beforeImage } },
-                { type: "image_url", image_url: { url: currentImage } }
-              ]
-            }
-          ],
-          stream: true,
-          response_format: { type: "json_object" }
-        });
+        const collectStream = async (): Promise<string> => {
+          const stream = await groq.chat.completions.create({
+            // Using llama-4-scout for multimodal analysis.
+            model: "meta-llama/llama-4-scout-17b-16e-instruct",
+            messages: [
+              {
+                role: "user",
+                content: [
+                  { type: "text", text: basePrompt + correctionHint },
+                  { type: "image_url", image_url: { url: beforeImage } },
+                  { type: "image_url", image_url: { url: currentImage } }
+                ]
+              }
+            ],
+            stream: true,
+            response_format: { type: "json_object" }
+          });
 
-        let text = "";
-        for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content;
-          if (content) text += content;
-        }
-        return text;
+          let text = "";
+          for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content;
+            if (content) text += content;
+          }
+          return text;
+        };
+        return withTimeout(collectStream(), 50000);
       },
       parse: (text) => extractJson(text) as Record<string, unknown>,
       validate: validateBodyAnalysis,

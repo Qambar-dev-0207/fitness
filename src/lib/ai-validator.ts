@@ -93,8 +93,9 @@ export function validateWorkoutPlan(data: unknown): ValidationResult {
       const dayObj = day as Record<string, unknown>;
       if (!str(dayObj.day)) errors.push(`weeklyStructure[${i}].day is missing`);
       if (!str(dayObj.focus)) errors.push(`weeklyStructure[${i}].focus is missing`);
-      if (!Array.isArray(dayObj.exercises) || dayObj.exercises.length === 0) {
-        errors.push(`weeklyStructure[${i}].exercises must be a non-empty array`);
+      const exercises = dayObj.exercises;
+      if (!Array.isArray(exercises) || exercises.length < 5) {
+        errors.push(`weeklyStructure[${i}].exercises must have at least 5 exercises (got ${Array.isArray(exercises) ? exercises.length : 0})`);
       } else {
         for (const [j, ex] of (dayObj.exercises as unknown[]).entries()) {
           const e = ex as Record<string, unknown>;
